@@ -1,0 +1,15 @@
+*{
+  box-sizing: border-box;
+ }
+
+body {
+  background-image: url("../images/wallpaper2.jpg");
+  background-repeat: no-repeat;
+  background-size: 960px;
+}
+
+
+
+h1 {
+	font-family: 'Amatic SC', cursive;
+}

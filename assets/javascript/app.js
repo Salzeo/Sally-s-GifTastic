@@ -20,14 +20,12 @@ $(document).ready(function() {
 
       }
 
-        $(document).on("click", ".pet-button", function() {
-        $("#pet").empty();
-        $(".pet-button").removeClass("active");
-        $(this).addClass("active");
-
-      var type = $(this).attr("data-type");
-      var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=dc6zaTOxFJmzC&limit=10";
-
+        $("#add-pet").on("click", function(event) {
+        event.preventDefault();
+        var type = $("#pet-Input").val();
+        var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=dc6zaTOxFJmzC&limit=10";
+       
+      
    $.ajax({
       url: queryURL,
       method: "GET"
@@ -35,24 +33,26 @@ $(document).ready(function() {
     .done(function(response) {
       var results = response.data;
 
+      console.log("response", response);
+
      for (var i = 0; i < results.length; i++) {
         var petDiv = $("<div class=\"pet-item\">");
 
-       var rating = results[i].rating;
+        var rating = results[i].rating;
 
-       var p = $("<p>").text("Rating: " + rating);
+        var p = $("<p>").text("Rating: " + rating);
 
-       var animated = results[i].images.fixed_height.url;
+        var animated = results[i].images.fixed_height.url;
         var still = results[i].images.fixed_height_still.url;
 
-       var petImage = $("<img>");
+        var petImage = $("<img>");
         petImage.attr("src", still);
         petImage.attr("data-still", still);
         petImage.attr("data-animate", animated);
         petImage.attr("data-state", "still");
         petImage.addClass("pet-image");
 
-       petDiv.append(p);
+        petDiv.append(p);
         petDiv.append(petImage);
 
        $("#pet").append(petDiv);
