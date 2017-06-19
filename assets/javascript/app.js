@@ -1,39 +1,89 @@
-<script type="text/javascript">
-      // Initial array of movies
-      var animals = ["Dog", "Cat", "Mouse", "Squirrel"];
+$(document).ready(function() {
 
-      // Function for displaying movie data
-      function renderButtons() {
 
-        $("#animals-view").html("");
-        // Delete the content inside the movies-view div prior to adding new movies
-        // (this is necessary otherwise you will have repeat buttons)
+      // Initial array of pets
+      var pet = ["Cat", "Dog", "Bird", "Fish", "Snake", 
+      "Gerbel", "Guinea Pig", "Hamster", "Hedge Hog", "Ferret", "Sugar Glider", "Chinchilla"];
 
-        // Loop through the array of movies, then generate buttons for each movie in the array
+      // function to make buttons and add to page
+      function populateButtons(arrayToUse, classToAdd, areaToAddTo) {
+        $(areaToAddTo).empty();
 
-        for (var i = 0; i < animals.length; i++) {
-          $("#animals-view").append("<button>" + animals[i] + "</button>"); 
-
-        };
+           for (var i = 0; i < arrayToUse.length; i++) {
+                var a = $("<button>");
+                  a.addClass(classToAdd);
+                  a.attr("data-type", arrayToUse[i]);
+                  a.text(arrayToUse[i]);
+                  $(areaToAddTo).append(a);
+        }     
 
       }
 
-      // This function handles events where the add movie button is clicked
-      $("#add-animal").on("click", function(event) {
-        // event.preventDefault() prevents submit button from trying to send a form.
-        // Using a submit button instead of a regular button allows the user to hit
-        // "Enter" instead of clicking the button if desired
-        event.preventDefault();
+        $(document).on("click", ".pet-button", function() {
+        $("#pet").empty();
+        $(".pet-button").removeClass("active");
+        $(this).addClass("active");
 
-        // Write code to grab the text the user types into the input field
-        var newButtonName = $("#animal-input").val();
-        // Write code to add the new movie into the movies array
-        animals.push(newButtonName);
+      var type = $(this).attr("data-type");
+      var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=dc6zaTOxFJmzC&limit=10";
 
-        // The renderButtons function is called, rendering the list of movie buttons
-        renderButtons();
-      });
+   $.ajax({
+      url: queryURL,
+      method: "GET"
+    })
+    .done(function(response) {
+      var results = response.data;
 
-      // Calling the renderButtons function to display the initial list of movies
-      renderButtons();
-    </script>
+     for (var i = 0; i < results.length; i++) {
+        var petDiv = $("<div class=\"pet-item\">");
+
+       var rating = results[i].rating;
+
+       var p = $("<p>").text("Rating: " + rating);
+
+       var animated = results[i].images.fixed_height.url;
+        var still = results[i].images.fixed_height_still.url;
+
+       var petImage = $("<img>");
+        petImage.attr("src", still);
+        petImage.attr("data-still", still);
+        petImage.attr("data-animate", animated);
+        petImage.attr("data-state", "still");
+        petImage.addClass("pet-image");
+
+       petDiv.append(p);
+        petDiv.append(petImage);
+
+       $("#pet").append(petDiv);
+      }
+    });
+  });
+
+ $(document).on("click", ".pet-image", function() {
+
+   var state = $(this).attr("data-state");
+
+   if (state === "still") {
+      $(this).attr("src", $(this).attr("data-animate"));
+      $(this).attr("data-state", "animate");
+    }
+    else {
+      $(this).attr("src", $(this).attr("data-still"));
+      $(this).attr("data-state", "still");
+    }
+  });
+
+ $("#add-pet").on("click", function(event) {
+    event.preventDefault();
+    var newPet = $("input").eq(0).val();
+
+   if (newPet.length > 2) {
+      pet.push(newPet);
+    }
+
+   populateButtons(pet, "pet-button", "#pet-buttons");
+
+ });
+
+ populateButtons(pet, "pet-button", "#pet-buttons");
+});
