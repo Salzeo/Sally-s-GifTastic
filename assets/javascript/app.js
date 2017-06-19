@@ -9,7 +9,8 @@ $(document).ready(function() {
       function populateButtons(arrayToUse, classToAdd, areaToAddTo) {
         $(areaToAddTo).empty();
 
-           for (var i = 0; i < arrayToUse.length; i++) {
+           for (var i = 0; i < arrayToUse.length
+            ; i++) {
                 var a = $("<button>");
                   a.addClass(classToAdd);
                   a.attr("data-type", arrayToUse[i]);
@@ -84,6 +85,3 @@ $(document).ready(function() {
    populateButtons(pet, "pet-button", "#pet-buttons");
 
  });
-
- populateButtons(pet, "pet-button", "#pet-buttons");
-});
