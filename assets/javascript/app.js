@@ -8,25 +8,31 @@ $(document).ready(function() {
       // function to make buttons and add to page
       function populateButtons(arrayToUse, classToAdd, areaToAddTo) {
         $(areaToAddTo).empty();
-
+          console.log(arrayToUse.length);
            for (var i = 0; i < arrayToUse.length
             ; i++) {
+                console.log("did the buttons show up");
                 var a = $("<button>");
                   a.addClass(classToAdd);
                   a.attr("data-type", arrayToUse[i]);
                   a.text(arrayToUse[i]);
                   $(areaToAddTo).append(a);
+      
         }     
 
       }
 
-        $("#add-pet").on("click", function(event) {
+      populateButtons(pet, "add-buttons", "#buttonContainer");
+
+        $(".add-buttons").on("click", function(event) {
         event.preventDefault();
+        console.log("it worked");
         var type = $("#pet-Input").val();
         var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=dc6zaTOxFJmzC&limit=10";
        
+
       
-   $.ajax({
+        $.ajax({
       url: queryURL,
       method: "GET"
     })
@@ -59,6 +65,10 @@ $(document).ready(function() {
       }
     });
   });
+ $("#add-pet").on("click", function(event){
+  var userInput = $("#pet-input").val(); 
+
+ });
 
  $(document).on("click", ".pet-image", function() {
 
@@ -84,4 +94,5 @@ $(document).ready(function() {
 
    populateButtons(pet, "pet-button", "#pet-buttons");
 
+ });
  });
